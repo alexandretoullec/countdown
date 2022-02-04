@@ -26,8 +26,15 @@ const giveAway = document.querySelector('.giveaway')
 const deadLine = document.querySelector('.deadLine')
 const items = document.querySelectorAll('.deadline-format h4')
 
-let futureDate = new Date(2022 , 4 , 24,15, 30,0); 
+let tempDate = new Date();
+let tempYear = tempDate.getFullYear();
+let tempMonth = tempDate.getMonth();
+let tempDay =  tempDate.getDate();
 
+// let futureDate = new Date(2022 , 2 , 24,15, 30,0); 
+
+
+const futureDate = new Date (tempYear,tempMonth,tempDay +10);
 const year = futureDate.getFullYear();
 const hours = futureDate.getHours();
 const minutes = futureDate.getMinutes();
@@ -40,7 +47,7 @@ const date = futureDate.getDate();
 const weekday = weekdays[futureDate.getDay()];
 
 
-giveAway.textContent = `giveaway ends on ${weekday} ${date} ${month} ${year} ${hours}:${minutes}`;
+giveAway.textContent = `giveaway ends on ${weekday} ${date} ${month} ${year} ${hours}:${minutes}am`;
 
 
 // future times in MS
@@ -66,11 +73,12 @@ function getRemainingTime (){
   console.log(oneDay);
 
   // calculate all values
-  let days = Math.floor(t/oneDay);
+  let days = t/oneDay;
+  days= Math.floor(days);
   let hours = Math.floor((t%oneDay) /oneHour);
-  console.log(hours);
+  
   let minutes = Math.floor((t%oneHour)/oneMinute);
-  let secondes = Math.floor((t/oneMinute)/1000);
+  let secondes = Math.floor((t%oneMinute)/1000);
 
   // set Values array
   const values =[days,hours,minutes,secondes];
@@ -86,7 +94,15 @@ function getRemainingTime (){
     item.innerHTML= format(values[index]);
 
   })
+  if(t<0){
+    clearInterval(countdown);
+    deadLine.innerHTML = `<h4 class="expired">Tis giveaway has expired!!</h4>`
+  }
 
 }
+
+// countdown
+
+let countdown = setInterval(getRemainingTime,1000)
 
 getRemainingTime();
